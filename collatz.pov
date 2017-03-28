@@ -2,7 +2,7 @@
 
 
 camera {	
-	location <0, 0, -40>		           
+	location <0, 0, -60>		           
 	look_at <0,10,0>       	
 	rotate <0,0,0>
 }                
@@ -76,9 +76,15 @@ sky_sphere {
 #local Identifier = 0;
 #while (Identifier < maxArraySize) 
     #local y0 = calcArray[Identifier];
-    #if (y0 > 0) 
+    #local y1 = 0;
     
-                    
+    
+    
+    #if ((Identifier+1) < maxArraySize) 
+        #local y1 = calcArray[Identifier+1];
+    #end
+    
+    #if (y0 > 0)                      
         sphere { <Identifier,y0,0>, 1
             texture { 
                 pigment { 
@@ -100,7 +106,21 @@ sky_sphere {
            scale<1,1.25,1>*0.8
            translate<Identifier-1,y0,0>
           } 
-    #end    
+    #end                                   
+    
+    #if ((y0 > 0) & (y1 > 0)) 
+        cylinder { <Identifier,y0,0>,<Identifier+1,y1,0>, 0.30 
+
+           texture { pigment { color rgb<1,1,1> filter 0.8 }                   
+                     finish  { phong 0.5 reflection{ 0.00 metallic 0.00} } 
+                   } 
+
+           scale <1,1,1> rotate<0,0,0> translate<0,0,0>
+         }
+
+        
+    #end
+    
     
     #local Identifier = Identifier + 1;
 #end
