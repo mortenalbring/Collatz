@@ -2,23 +2,25 @@
 
 
 camera {	
-	location <0, 2, -400>		           
+	location <0, 0, -40>		           
 	look_at <0,10,0>       	
 }                
 
-
-plane { y, -220
-		pigment { checker rgb <0.1, 0.1, 0.1> rgb <1.0, 1.0, 1.0> scale 5 }
-		finish { reflection 0.2 ambient 0.4 }
+light_source {
+  0*x
+  color rgb 1.0
+  area_light
+  <8, 0, 0> <0, 0, 8>
+  6, 4
+  adaptive 3
+  translate <0, 0, -10>
 }
 
-fog {
-    distance 1000
-    color rgb 0.9
-    fog_offset 2
-    fog_alt 5
-    fog_type 2
-}          
+
+plane { y, -2
+		pigment { checker rgb <0.1, 0.1, 0.1> rgb <1.0, 1.0, 1.0> scale 5 }
+		finish { reflection 0.2 ambient 0.4 }
+}        
 	
 
 sky_sphere {
@@ -29,7 +31,7 @@ sky_sphere {
 			}
 		}
 		pigment { 
-		    wrinkles turbulence clock
+		    wrinkles turbulence 0.1
 			color_map {
 				[0 rgbt <1,1,1,1>]
 				[0.5 rgbt <0.98, 0.99, 0.99, .6>]
@@ -54,6 +56,16 @@ sky_sphere {
     #end
     
     #declare x1 = x0;
+    
+                    
+    sphere { <iteration,x0,0>, 1
+        texture { pigment{ color rgb<1.00, 0.55, 0.00>}
+            finish { phong 1.0 reflection 0.00}
+        } 
+
+        scale<1,1,1>  rotate<0,0,0>  
+    }  
+     
 #end   
             
 	
