@@ -1,3 +1,6 @@
+#include "math.inc"
+
+
 camera {	
 	location <0, 2, -400>		           
 	look_at <0,10,0>       	
@@ -35,5 +38,22 @@ sky_sphere {
         scale <.8, .1, .8>
     }
 } 
+          
+          
+#local x0 = 13;
+#local x1 = x0;
+#local iteration = 0;
+#while(x1 > 2) 
 
+    #declare iteration = iteration + 1;                     
+    #declare isEven = even(x0);                                 
+    #if (isEven = 1)
+        #declare x0 = x0 / 2;
+    #else 
+        #declare x0 = (x0 * 3) + 1;   
+    #end
+    
+    #declare x1 = x0;
+#end   
+            
 	
