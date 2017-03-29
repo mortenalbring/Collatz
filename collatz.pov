@@ -42,7 +42,7 @@ sky_sphere {
     }
 } 
 
-#declare maxArraySize = 20;
+#declare maxArraySize = 200;
 
 #macro drawBetweenPoints(x0,x1,y0,y1)            
 
@@ -74,10 +74,10 @@ sky_sphere {
 	#end
 #end
 
-#macro makeCollatzPoints(calcArray,start)                   
-	#local x0 = start;
-	#local x1 = x0;
-	#local iteration = 0;     
+#macro makeCollatzPoints(calcArray,start,startIndex)                   
+	#local xxx0 = start;
+	#local xxx1 = xxx0;
+	#local arrayIndex = startIndex;     
 	#declare calcArray = array[maxArraySize];   
 
 	#local i = 0;
@@ -87,18 +87,21 @@ sky_sphere {
 	#end
 
 
-	#while(x1 > 1)     
-		#declare isEven = even(x0);                                 
-		#if (isEven = 1)
-			#declare x0 = x0 / 2;
+	#while(xxx1 > 1)     
+		#debug concat("Start: ",str(start,5,0)," Array Index ", str(arrayIndex,5,0)," x0 ",str(xxx0,5,0), "\n")
+
+		#local isEven = even(xxx0);                                 
+		#if (isEven > 0)
+			#local xxx0 = xxx0 / 2;
 		#else 
-			#declare x0 = (x0 * 3) + 1;   
+			#local xxx0 = (xxx0 * 3) + 1;   
 		#end                       
     
-		#declare calcArray[iteration] = x0;
+		#declare calcArray[arrayIndex] = xxx0;
+		
     
-		#declare x1 = x0;
-		#declare iteration = iteration + 1;                     	                                      	                                                                    
+		#local xxx1 = xxx0;
+		#local arrayIndex = arrayIndex + 1;                     	                                      	                                                                    
 	#end      
 #end
 	
@@ -160,7 +163,15 @@ sky_sphere {
 
 
 #declare calcArray = array[maxArraySize];
-makeCollatzPoints(calcArray,10)
-drawCollatzPoints(calcArray)
+#declare startFrom = (13+int(clock));
+
+#declare startCollatzNumber = 13;
+#declare endCollatzNumber = (startCollatzNumber+int(clock));
+#declare collatzStart = startCollatzNumber;
+#while (collatzStart <= endCollatzNumber)
+	makeCollatzPoints(calcArray,collatzStart,0)
+	drawCollatzPoints(calcArray)
+	#declare collatzStart = collatzStart + 1;
+#end
 
 
