@@ -41,6 +41,42 @@ sky_sphere {
         scale <.8, .1, .8>
     }
 } 
+
+#macro drawBetweenPoints(x0,x1,y0,y1)            
+
+	#local startPoint = 0;
+	#local endPoint = 0;
+
+	#if (y0 > y1)
+		#local startPoint = y1;
+		#local endPoint = y0;
+	#else
+		#local startPoint = y0;
+		#local endPoint = y1;
+	#end
+
+	#local diff = (endPoint - startPoint);
+	
+	#local increment = ((x1-x0) / diff);
+
+	
+	#local j = startPoint;
+	#local p = 0;
+	#while(j<endPoint)
+
+		#local xx = x0 + ((x0/diff)*p);
+		sphere {<xx,j,0> 0.5}
+		#local j = j + 1;
+		#local p = p + 1;
+
+	#end
+	
+
+
+	
+
+#end
+	
           
           
 #local x0 = 13;
@@ -49,10 +85,10 @@ sky_sphere {
 #declare maxArraySize = 20;
 #declare calcArray = array[maxArraySize];   
 
-#local Identifier = 0;
-#while (Identifier < maxArraySize) 
-    #declare calcArray[Identifier] = 0;
-    #local Identifier = Identifier + 1;
+#local i = 0;
+#while (i < maxArraySize) 
+    #declare calcArray[i] = 0;
+    #local i = i + 1;
 #end
 
 
@@ -73,19 +109,19 @@ sky_sphere {
 	                                      	                                                                    
 #end                                   
 
-#local Identifier = 0;
-#while (Identifier < maxArraySize) 
-    #local y0 = calcArray[Identifier];
+#local i = 0;
+#while (i < maxArraySize) 
+    #local y0 = calcArray[i];
     #local y1 = 0;
     
     
     
-    #if ((Identifier+1) < maxArraySize) 
-        #local y1 = calcArray[Identifier+1];
+    #if ((i+1) < maxArraySize) 
+        #local y1 = calcArray[i+1];
     #end
     
     #if (y0 > 0)                      
-        sphere { <Identifier,y0,0>, 1
+        sphere { <i,y0,0>, 1
             texture { 
                 pigment { 
                     color rgb<1.00, 0.55, 0.00>
@@ -104,28 +140,26 @@ sky_sphere {
                   } 
     
            scale<1,1.25,1>*0.8
-           translate<Identifier-1,y0,0>
+           translate<i-1,y0,0>
           } 
     #end                                   
     
     #if ((y0 > 0) & (y1 > 0)) 
-        cylinder { <Identifier,y0,0>,<Identifier+1,y1,0>, 0.30 
+		//drawBetweenPoints(i,i+1,y0,y1)
+
+        cylinder { <i,y0,0>,<i+1,y1,0>, 0.30 
 
            texture { pigment { color rgb<1,1,1> filter 0.8 }                   
                      finish  { phong 0.5 reflection{ 0.00 metallic 0.00} } 
                    } 
 
            scale <1,1,1> rotate<0,0,0> translate<0,0,0>
-         }
-
-        
+         }       
     #end
     
     
-    #local Identifier = Identifier + 1;
+    #local i = i + 1;
 #end
 
 
 
-            
-	
