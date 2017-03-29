@@ -2,26 +2,36 @@
 
 
 camera {	
-	location <0, 0, -60>		           
-	look_at <0,10,0>       	
+	location <300, 100, -200>		           
+	look_at <0,15,0>       	
 	rotate <0,0,0>
 }                
 
+      
 light_source {
-  0*x
-  color rgb 1.0
+  <0,0,0>             // light's position 
+  color rgb 1.0       // light's color
   area_light
-  <8, 0, 0> <0, 0, 8>
-  6, 4
-  adaptive 3
-  translate <0, 0, -10>
+  <8, 0, 0> <0, 0, 8> // lights spread out across this distance (x * z)
+  4, 4                // total number of lights in grid (4x*4z = 16 lights)
+  adaptive 0          // 0,1,2,3...
+  jitter              // adds random softening of light
+  circular            // make the shape of the light circular
+  orient              // orient light
+  translate <40, 80, -40>   // <x y z> position of light
 }
+      
+
+
+
 
 
 plane { y, -2
-		pigment { checker rgb <0.1, 0.1, 0.1> rgb <1.0, 1.0, 1.0> scale 5 }
-		finish { reflection 0.2 ambient 0.4 }
-}        
+		pigment { checker rgb <0.1, 0.1, 0.1> rgb <1.0, 1.0, 1.0> scale 50 }
+	//	finish { reflection 0.2 ambient 0.4 }
+}  
+
+
 	
 
 sky_sphere {
@@ -107,8 +117,10 @@ sky_sphere {
 	
 
 
-#macro drawCollatzPoints(calcArray)                             
-	#local i = 0;
+#macro drawCollatzPoints(calcArray,startCollatzNumber,seriesCount)                             
+	#local i = 0;          
+	#local seriesColor = rgb<0.55 + (startCollatzNumber/100) , 0.2, 0.20>;
+	
 	#while (i < maxArraySize) 
 		#local y0 = calcArray[i];
 		#local y1 = 0;
@@ -119,11 +131,12 @@ sky_sphere {
 			#local y1 = calcArray[i+1];
 		#end
     
-		#if (y0 > 0)                      
-			sphere { <i,y0,0>, 1
+		#if (y0 > 0)  
+		                    
+			sphere { <i,y0,startCollatzNumber>, 1
 				texture { 
 					pigment { 
-						color rgb<1.00, 0.55, 0.00>
+						color seriesColor
 						filter 0.7
 					}
 					finish { phong 1.0 reflection 0.00}
@@ -131,7 +144,8 @@ sky_sphere {
     
 				scale<1,1,1>  rotate<0,0,0>  
 			}
-        
+                             
+                             /*
 			text { ttf "arial.ttf", str(y0,5,0), 0.02, 0.0
     
 			   texture{ pigment{ color rgb<0,0,0>*1.3 }               
@@ -139,16 +153,18 @@ sky_sphere {
 					  } 
     
 			   scale<1,1.25,1>*0.8
-			   translate<i-1,y0,0>
-			  } 
+			   translate<i-1,y0,startCollatzNumber>
+			  }                         
+			  */
+			  
 		#end                                   
     
 		#if ((y0 > 0) & (y1 > 0)) 
 			//drawBetweenPoints(i,i+1,y0,y1)
 
-			cylinder { <i,y0,0>,<i+1,y1,0>, 0.30 
+			cylinder { <i,y0,startCollatzNumber>,<i+1,y1,startCollatzNumber>, 0.80 
 
-			   texture { pigment { color rgb<1,1,1> filter 0.8 }                   
+			   texture { pigment { color seriesColor filter 0.8 }                   
 						 finish  { phong 0.5 reflection{ 0.00 metallic 0.00} } 
 					   } 
 
@@ -168,9 +184,13 @@ sky_sphere {
 #declare startCollatzNumber = 13;
 #declare endCollatzNumber = (startCollatzNumber+int(clock));
 #declare collatzStart = startCollatzNumber;
-#while (collatzStart <= endCollatzNumber)
+#declare seriesCount = 0;
+#while (collatzStart <= endCollatzNumber)    
+
+
 	makeCollatzPoints(calcArray,collatzStart,0)
-	drawCollatzPoints(calcArray)
+	drawCollatzPoints(calcArray,collatzStart,seriesCount)
+	#declare seriesCount = seriesCount + 1;
 	#declare collatzStart = collatzStart + 1;
 #end
 
