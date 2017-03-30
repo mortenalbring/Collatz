@@ -20,15 +20,18 @@ namespace CollatzPoints
     {
         public int startNumber { get; set; }
         public int endNumber { get; set; }
-        public bool upwards { get; set; }
-
-        public Edge(int startNumber, int endNumber)
+    
+        public Edge(int number1, int number2)
         {            
-            this.startNumber = startNumber;
-            this.endNumber = endNumber;
-            if (startNumber > endNumber)
+            if (number1 < number2)
             {
-                upwards = true;
+                startNumber = number1;
+                endNumber = number2;
+            }
+            else
+            {
+                startNumber = number2;
+                endNumber = number1;
             }
         }
 
@@ -43,7 +46,7 @@ namespace CollatzPoints
             var nodes = new List<Node>();
             var edges = new List<Edge>();
 
-            for (int i = 3; i < 10; i++)
+            for (int i = 3; i < 1000; i++)
             {
                 var y0 = i;
                 var y1 = y0;
@@ -63,24 +66,31 @@ namespace CollatzPoints
                     }
 
                     var edge = new Edge(y1, y0);
-                    var existingEdge = edges.FirstOrDefault(e => e.startNumber == y1 && e.endNumber == y0);
+                    var existingEdge = edges.FirstOrDefault(e => e.startNumber == edge.startNumber && e.endNumber == edge.endNumber);
                     if (existingEdge == null)
                     {
                         edges.Add(edge);
+                    }
+                    else
+                    {
+                        break;
                     }
                     
                     y1 = y0;
                 }
             }
 
+            var startNumbers = edges.OrderBy(e => e.startNumber).Select(e => e.startNumber).Distinct().ToList();
 
-            foreach (var edge in edges)
+            foreach(var startNumber in startNumbers)
             {
-                Debug.WriteLine(edge.startNumber + "\t" + edge.endNumber + "\t" + edge.upwards);
-            }
+                var outgoingEdges = edges.Where(e => e.startNumber == startNumber).ToList();
 
-
-
+                foreach(var outgoingEdge in outgoingEdges)
+                {
+                    Debug.WriteLine(startNumber + "\t" + outgoingEdge.endNumber);
+                }
+            }           
 
         }
     }
