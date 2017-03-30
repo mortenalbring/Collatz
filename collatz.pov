@@ -194,4 +194,11 @@ sky_sphere {
 	#declare collatzStart = collatzStart + 1;
 #end
 
-
+                   
+                   
+#fopen MyFile "test.txt" read
+  #while (defined(MyFile))
+    #read (MyFile,Var1)
+    sphere { Var1, 10 }
+    
+  #end                   
