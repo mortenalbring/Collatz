@@ -7,55 +7,30 @@ using System.Threading.Tasks;
 
 namespace CollatzPoints
 {
-    public class Node
-    {
-        public int number { get; set; }
-
-        public Node(int number)
-        {
-            this.number = number;
-        }
-    }
-    public class Edge
-    {
-        public int startNumber { get; set; }
-        public int endNumber { get; set; }
-    
-        public Edge(int number1, int number2)
-        {            
-            if (number1 < number2)
-            {
-                startNumber = number1;
-                endNumber = number2;
-            }
-            else
-            {
-                startNumber = number2;
-                endNumber = number1;
-            }
-        }
-
+    public class Strand
+    {        
+        public int StartNumber { get; set; }     
+        public List<int> Numbers = new List<int>();
     }
     class Program
     {
 
         static void Main(string[] args)
-        {
-            var startPoint = 13;
-            var points = new List<int>();
-            var nodes = new List<Node>();
-            var edges = new List<Edge>();
+        {                        
+            
+            var strands = new List<Strand>();
+            
 
-            for (int i = 3; i < 1000; i++)
+            for (int i = 3; i < 30; i++)
             {
-                var y0 = i;
-                var y1 = y0;
-                while (y0 > 2)
-                {
-                    var node = new Node(y0);
-                    nodes.Add(node);
+                var strand = new Strand();
+                strand.StartNumber = i;
 
-                    points.Add(y0);
+                var y0 = i;          
+                while (y0 > 2)
+                {                
+                    strand.Numbers.Add(y0);
+           
                     if (y0 % 2 == 0)
                     {
                         y0 = y0 / 2;
@@ -63,35 +38,22 @@ namespace CollatzPoints
                     else
                     {
                         y0 = y0 * 3 + 1;
-                    }
-
-                    var edge = new Edge(y1, y0);
-                    var existingEdge = edges.FirstOrDefault(e => e.startNumber == edge.startNumber && e.endNumber == edge.endNumber);
-                    if (existingEdge == null)
-                    {
-                        edges.Add(edge);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                    
-                    y1 = y0;
+                    }                
                 }
+
+                strands.Add(strand);
+           
             }
 
-            var startNumbers = edges.OrderBy(e => e.startNumber).Select(e => e.startNumber).Distinct().ToList();
-
-            foreach(var startNumber in startNumbers)
+            foreach (var strand in strands)
             {
-                var outgoingEdges = edges.Where(e => e.startNumber == startNumber).ToList();
-
-                foreach(var outgoingEdge in outgoingEdges)
+                for (int index = 0; index < strand.Numbers.Count; index++)
                 {
-                    Debug.WriteLine(startNumber + "\t" + outgoingEdge.endNumber);
+                    var number = strand.Numbers[index];
+                    Debug.WriteLine(index + "\t" + number);
                 }
-            }           
-
+            }
+            
         }
     }
 }
