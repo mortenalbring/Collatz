@@ -2,7 +2,7 @@
 
 
 camera {	
-	location <300, 100, -200>		           
+	location <0, 0, -30>		           
 	look_at <0,15,0>       	
 	rotate <0,0,0>
 }                
@@ -185,6 +185,7 @@ sky_sphere {
 #declare endCollatzNumber = (startCollatzNumber+int(clock));
 #declare collatzStart = startCollatzNumber;
 #declare seriesCount = 0;
+/*
 #while (collatzStart <= endCollatzNumber)    
 
 
@@ -193,12 +194,31 @@ sky_sphere {
 	#declare seriesCount = seriesCount + 1;
 	#declare collatzStart = collatzStart + 1;
 #end
+ */
+                   
+#local maxPoints = clock;                   
+#local drawnPoints = 0; 
+#local camerazPos = -30 - (2*clock);
 
-                   
-                   
 #fopen MyFile "test.txt" read
-  #while (defined(MyFile))
-    #read (MyFile,Var1)
-    sphere { Var1, 10 }
+  #while ((defined(MyFile)) & (drawnPoints < maxPoints))
+    #read (MyFile,var_coords1,var_coords2,var_color)        
+    sphere { var_coords1, 1               
+        texture { 
+            pigment { color var_color }
+        }          
+                      
+    }   
     
+    cylinder { var_coords1, var_coords2, 0.9
+                  texture { pigment { color var_color filter 0.8 }                   
+						 finish  { phong 0.5 reflection{ 0.00 metallic 0.00} } 
+					   }
+        }
+    #local drawnPoints = drawnPoints + 1; 
+    #debug concat(str(drawnPoints,5,0)," ",str(maxPoints,5,0),"\n")
+        
+        camera {	location <0, 20, camerazPos>}                
+
+        
   #end                   

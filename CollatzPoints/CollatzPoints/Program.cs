@@ -49,16 +49,23 @@ namespace CollatzPoints
             var outputStrings = new List<string>();
             for (int strandIndex = 0; strandIndex < strands.Count; strandIndex++)
             {
+                var rnd = new Random();
+                var rvalue = rnd.NextDouble();
+                
                 var strand = strands[strandIndex];
-                for (int index = 0; index < strand.Numbers.Count; index++)
+                for (int index = 1; index < strand.Numbers.Count; index++)
                 {
+                    var previousNumber = strand.Numbers[index - 1];
+
                     var number = strand.Numbers[index];
                     Debug.WriteLine(index + "\t" + number);
                     var coordinates = "<" + index + "," + number + ",0>";
-                    var rvalue = (float)strandIndex/(float)strands.Count;
+                    var coordinatesCylinder1 = "<" + index + "," + number + ",0>";
+                    var coordinatesCylinder2 = "<" + index + "," + previousNumber + ",0>";
+                    //var rvalue = (float)strandIndex/(float)strands.Count;
                     var color = "<" + rvalue + ",1,0>";
 
-                    var output = coordinates + "," + color + ",";
+                    var output = coordinatesCylinder1 + "," + coordinatesCylinder2 + "," + color + ",";
                     //output = coordinates;
                     outputStrings.Add(output);
                 }
